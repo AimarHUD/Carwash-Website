@@ -107,6 +107,17 @@ CREATE TABLE tb_company_profile (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE tb_kontak (
+  id_kontak INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nama VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  no_telp VARCHAR(25) NOT NULL,
+  pesan TEXT NOT NULL,
+  status ENUM('baru','dibaca') NOT NULL DEFAULT 'baru',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE tb_galeri (
   id_galeri INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   judul VARCHAR(150) NOT NULL,
@@ -152,6 +163,11 @@ INSERT INTO tb_detail_transaksi (id_transaksi, id_layanan, harga, qty, subtotal)
 INSERT INTO tb_pembayaran (id_transaksi, metode_bayar, jumlah_bayar, status_bayar, tanggal_bayar) VALUES
 (1, 'Tunai', 120000.00, 'pending', NOW()),
 (2, 'Transfer', 30000.00, 'pending', NOW());
+
+INSERT INTO tb_kontak (nama, email, no_telp, pesan, status) VALUES
+('Hari Purnomo', 'hari.purnomo@email.com', '089876543210', 'Halo, saya ingin menanyakan tentang paket cuci premium untuk mobil saya. Berapa harganya dan berapa lama prosesnya?', 'baru'),
+('Dewi Lestari', 'dewi.lestari@email.com', '081234567890', 'Saya ingin booking layanan cuci motor untuk hari Minggu pukul 10:00. Apakah tersedia?', 'dibaca'),
+('Roni Wijaya', 'roni.wijaya@email.com', '082987654321', 'Apakah ada diskon untuk member setia atau paket tahunan?', 'baru');
 
 INSERT INTO tb_galeri (judul, gambar, keterangan, tanggal_upload) VALUES
 ('Cuci Mobil Premium', 'uploads/carwash-1.jpg', 'Mobil bersih kinclong setelah treatment.', CURDATE()),
