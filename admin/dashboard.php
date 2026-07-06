@@ -132,14 +132,10 @@ $flash = get_flash_message();
             <div class="collapse navbar-collapse" id="topNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pelanggan.php">Pelanggan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="kendaraan.php">Kendaraan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="layanan.php">Layanan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="karyawan.php">Karyawan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="transaksi.php">Transaksi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pembayaran.php">Pembayaran</a></li>
-                    <li class="nav-item"><a class="nav-link" href="company_profile.php">Company Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="galeri.php">Galeri</a></li>
+                    <li class="nav-item"><a class="nav-link" href="layanan.php">Company Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
+                    <li class="nav-item"><a class="nav-link" href="company_profile.php">Kontak Masuk</a></li>
+                    <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
                 </ul>
                 <a class="btn btn-outline-light" href="../logout.php">Logout</a>
             </div>
