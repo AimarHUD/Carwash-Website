@@ -134,8 +134,9 @@ $flash = get_flash_message();
                     <li class="nav-item"><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="layanan.php">Company Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
-                    <li class="nav-item"><a class="nav-link" href="company_profile.php">Kontak Masuk</a></li>
+                    <li class="nav-item"><a class="nav-link" href="company_profile.php">Form</a></li>
                     <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kontak_masuk.php">Kontak Masuk</a></li>
                 </ul>
                 <a class="btn btn-outline-light" href="../logout.php">Logout</a>
             </div>
