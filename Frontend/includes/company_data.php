@@ -3,7 +3,7 @@ require_once dirname(__DIR__, 2) . '/config/koneksi.php';
 
 $company = [
     'id' => null,
-    'nama_perusahaan' => 'WashWoosh',
+    'nama_perusahaan' => 'Carwash Woosh',
     'logo' => null,
     'alamat' => 'Jl. Contoh No.123, Kecamatan Dapa',
     'no_telp' => '+62 812 3456 7890',

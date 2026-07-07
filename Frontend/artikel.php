@@ -64,10 +64,10 @@ $otherArticles = array_slice($articles, 1);
             <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
-                <a href="tentang.php">Tentang Kita</a>
-                <a href="service.php">Service Kita</a>
+                <a href="tentang.php">Tentang Kami</a>
+                <a href="service.php">Layanan Kami</a>
                 <a href="artikel.php">Artikel</a>
-                <a href="kontak.php">Kontak Kita</a>
+                <a href="kontak.php">Kontak Kami</a>
             </nav>
         </div>
     </header>
