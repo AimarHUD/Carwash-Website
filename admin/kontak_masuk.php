@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom border-white border-opacity-10">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.php">🚗 CarWash Dapa</a>
+            <a class="navbar-brand" href="dashboard.php">WashWoosh</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
                 aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="collapse navbar-collapse" id="topNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="layanan.php">Company Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../Frontend/index.php">Company Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
                     <li class="nav-item"><a class="nav-link" href="company_profile.php">Form</a></li>
                     <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <main class="container py-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
             <div>
-                <h2 class="h4 mb-1">📬 Kontak Masuk</h2>
+                <h2 class="h4 mb-1">Kontak Masuk</h2>
                 <p class="text-muted mb-0">Kelola pesan dan pertanyaan dari pengunjung website.</p>
             </div>
             <div class="text-end">
