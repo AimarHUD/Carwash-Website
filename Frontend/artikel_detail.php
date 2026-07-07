@@ -12,16 +12,27 @@ $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
 
-$stmt = $pdo->prepare('SELECT * FROM tb_artikel WHERE status = "Publish" ORDER BY tanggal DESC, created_at DESC');
-$stmt->execute();
-$articles = $stmt->fetchAll();
+$artikelId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($artikelId <= 0) {
+    header('Location: artikel.php');
+    exit;
+}
+
+$stmt = $pdo->prepare('SELECT * FROM tb_artikel WHERE id_artikel = :id AND status = "Publish" LIMIT 1');
+$stmt->execute(['id' => $artikelId]);
+$artikel = $stmt->fetch();
+
+if (!$artikel) {
+    header('Location: artikel.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikel WashWoosh</title>
+    <title><?= htmlspecialchars($artikel['judul']) ?> - WashWoosh</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -40,22 +51,19 @@ $articles = $stmt->fetchAll();
 
     <main class="container content-wrapper">
         <section class="page-section">
-            <h1>Artikel</h1>
-            <?php if (empty($articles)): ?>
-                <article>
-                    <h2>Belum ada artikel yang dipublikasikan.</h2>
-                    <p>Silakan kembali nanti setelah admin menambahkan artikel baru.</p>
-                </article>
-            <?php else: ?>
-                <?php foreach ($articles as $artikel): ?>
-                    <article>
-                        <h2><?= htmlspecialchars($artikel['judul']) ?></h2>
-                        <p><?= nl2br(htmlspecialchars(substr($artikel['isi'], 0, 280))) ?><?= strlen($artikel['isi']) > 280 ? '...' : '' ?></p>
-                        <p><small>Oleh <?= htmlspecialchars($artikel['penulis']) ?> | <?= date('d M Y', strtotime($artikel['tanggal'])) ?></small></p>
-                        <p><a href="artikel_detail.php?id=<?= htmlspecialchars($artikel['id_artikel']) ?>">Baca Selengkapnya</a></p>
-                    </article>
-                <?php endforeach; ?>
+            <h1><?= htmlspecialchars($artikel['judul']) ?></h1>
+            <p><small>Oleh <?= htmlspecialchars($artikel['penulis']) ?> | <?= date('d M Y', strtotime($artikel['tanggal'])) ?></small></p>
+            <?php if (!empty($artikel['gambar'])): ?>
+                <div style="margin-bottom: 24px;">
+                    <img src="<?= htmlspecialchars($artikel['gambar']) ?>" alt="<?= htmlspecialchars($artikel['judul']) ?>" style="width:100%;border-radius:16px;">
+                </div>
             <?php endif; ?>
+            <article>
+                <?= nl2br(htmlspecialchars($artikel['isi'])) ?>
+            </article>
+            <div style="margin-top: 32px;">
+                <a href="artikel.php" class="btn btn-secondary">Kembali ke Artikel</a>
+            </div>
         </section>
     </main>
 
