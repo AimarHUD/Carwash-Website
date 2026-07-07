@@ -125,6 +125,7 @@ $flash = get_flash_message();
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom border-white border-opacity-10">
         <div class="container">
+            <a class="navbar-brand" href="dashboard.php">WashWoosh</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
                 aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
