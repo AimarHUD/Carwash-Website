@@ -9,17 +9,17 @@ html, body {
 }
 
 body {
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #1f2937;
-    background: #edf2f8;
-    line-height: 1.55;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+    background: #f7f9fb;
+    line-height: 1.6;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 .container {
-    width: min(1024px, calc(100% - 32px));
+    width: min(1100px, calc(100% - 40px));
     margin: 0 auto;
 }
 
@@ -28,8 +28,8 @@ body {
 }
 
 .site-header {
-    background: rgba(255, 255, 255, 0.96);
-    border-bottom: 1px solid #dbe4ee;
+    background: #ffffff;
+    border-bottom: 1px solid #e3e8ee;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -45,9 +45,9 @@ body {
 }
 
 .logo {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #183b56;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0d3b66;
     text-decoration: none;
     letter-spacing: 0.03em;
 }
@@ -67,33 +67,29 @@ body {
     transition: 0.2s all ease;
 }
 
-.site-nav a:hover,
-.site-nav a.active {
-    color: #0f172a;
-    background: rgba(13, 59, 102, 0.08);
+.site-nav a:hover {
+    color: #0d3b66;
 }
 
 .hero {
-    background: linear-gradient(135deg, #0f3d66 0%, #1a6e8e 100%);
+    background: linear-gradient(135deg, #0d3b66 0%, #1f6f8b 100%);
     color: #ffffff;
     padding: 48px 0 36px;
 }
 
 .hero-content {
-    max-width: 540px;
+    max-width: 680px;
 }
 
 .hero h1 {
-    font-size: clamp(1.9rem, 4.5vw, 3rem);
-    margin-bottom: 12px;
-    line-height: 1.08;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 16px;
 }
 
 .hero p {
-    font-size: 0.95rem;
-    margin-bottom: 18px;
-    max-width: 520px;
-    color: rgba(255, 255, 255, 0.88);
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+    max-width: 620px;
 }
 
 .hero-actions {
@@ -115,11 +111,11 @@ body {
 
 .btn-primary {
     background: #ffd166;
-    color: #0f3d66;
+    color: #0d3b66;
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(255,255,255,0.16);
     color: #ffffff;
     border: 1px solid rgba(255,255,255,0.24);
 }
@@ -131,16 +127,16 @@ body {
     margin: 24px auto;
 }
 
-.card {
+.card, .feature-item, .contact-card {
     background: #ffffff;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
 .card h2 {
-    font-size: 1.18rem;
-    margin-bottom: 10px;
+    font-size: 1.35rem;
+    margin-bottom: 14px;
 }
 
 .features {
@@ -152,9 +148,9 @@ body {
 
 .feature-item {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
 }
 
 .feature-item h3 {
@@ -191,7 +187,7 @@ body {
 }
 
 .site-footer {
-    background: #0d3b66;
+    background: #0f172a;
     color: #ffffff;
     padding: 22px 0;
 }
@@ -231,14 +227,14 @@ body {
 
 .contact-card {
     background: #ffffff;
-    border-radius: 20px;
-    padding: 22px;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
 .contact-card h2 {
-    font-size: 1.45rem;
-    margin-bottom: 14px;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
 }
 
 .contact-form label {
@@ -258,7 +254,12 @@ body {
     font-size: 0.95rem;
     color: #1f2937;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #0d3b66;
+    box-shadow: 0 0 0 4px rgba(13, 59, 102, 0.08);
 }
 
 .contact-form textarea {
