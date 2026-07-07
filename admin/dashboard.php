@@ -263,7 +263,7 @@ $flash = get_flash_message();
                 <p>Selamat datang, <?= htmlspecialchars($_SESSION['nama_lengkap']) ?>. Pantau transaksi dan performa layanan carwash Anda di sini.</p>
             </div>
             <div class="topbar-actions">
-                <a href="../company/index.php" class="btn-company" target="_blank">🌐 Buka Web Company</a>
+                <a href="../Frontend/index.php" class="btn-company" target="_blank">🌐 Buka Web Company</a>
                 <span class="pill">Admin</span>
                 <span class="pill"><?= date('d M Y') ?></span>
             </div>

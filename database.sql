@@ -132,7 +132,7 @@ CREATE TABLE tb_artikel (
   id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   judul VARCHAR(255) NOT NULL,
   isi TEXT NOT NULL,
-  gambar VARCHAR(255) DEFAULT NULL,
+  image VARCHAR(255) DEFAULT NULL,
   penulis VARCHAR(100) NOT NULL,
   tanggal DATE NOT NULL,
   status ENUM('Draft','Publish') NOT NULL DEFAULT 'Draft',
