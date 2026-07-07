@@ -175,6 +175,19 @@ $flash = get_flash_message();
             font-size: 0.92rem;
         }
 
+        .btn-company {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.7rem 1rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--primary) 0%, #2fb7ff 100%);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 10px 24px rgba(13, 110, 253, 0.2);
+        }
+
         .content {
             padding: 1.5rem;
         }
@@ -250,6 +263,7 @@ $flash = get_flash_message();
                 <p>Selamat datang, <?= htmlspecialchars($_SESSION['nama_lengkap']) ?>. Pantau transaksi dan performa layanan carwash Anda di sini.</p>
             </div>
             <div class="topbar-actions">
+                <a href="../company/index.php" class="btn-company" target="_blank">🌐 Buka Web Company</a>
                 <span class="pill">Admin</span>
                 <span class="pill"><?= date('d M Y') ?></span>
             </div>
