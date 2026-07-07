@@ -128,6 +128,17 @@ CREATE TABLE tb_galeri (
   deleted_at TIMESTAMP NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE tb_artikel (
+  id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  judul VARCHAR(255) NOT NULL,
+  isi TEXT NOT NULL,
+  gambar VARCHAR(255) DEFAULT NULL,
+  penulis VARCHAR(100) NOT NULL,
+  tanggal DATE NOT NULL,
+  status ENUM('Draft','Publish') NOT NULL DEFAULT 'Draft',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO tb_admin (username, password, nama_lengkap, email, level) VALUES
 ('admin', '$2y$10$u8eLQH1TYqlBSA/quYVnJ.zDRCUWEvSMtNaxShKHpOYyHIeVQ2hnG', 'Administrator', 'admin@carwash.com', 'super');
 
