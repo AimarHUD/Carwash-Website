@@ -1,11 +1,12 @@
 <?php
+require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
 
 $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
     id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     judul VARCHAR(255) NOT NULL,
     isi TEXT NOT NULL,
-    gambar VARCHAR(255) DEFAULT NULL,
+    image VARCHAR(255) DEFAULT NULL,
     penulis VARCHAR(100) NOT NULL,
     tanggal DATE NOT NULL,
     status ENUM("Draft","Publish") NOT NULL DEFAULT "Draft",
@@ -22,6 +23,16 @@ $stmt = $pdo->prepare('SELECT * FROM tb_artikel WHERE id_artikel = :id AND statu
 $stmt->execute(['id' => $artikelId]);
 $artikel = $stmt->fetch();
 
+function article_image_url(?string $path): ?string
+{
+    $path = trim((string) $path);
+    if ($path === '') {
+        return null;
+    }
+
+    return '../' . ltrim(str_replace('\\', '/', $path), '/');
+}
+
 if (!$artikel) {
     header('Location: artikel.php');
     exit;
@@ -32,13 +43,13 @@ if (!$artikel) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($artikel['judul']) ?> - WashWoosh</title>
+    <title><?= htmlspecialchars($artikel['judul']) ?> - <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container header-inner">
-            <a class="logo" href="index.php">WashWoosh</a>
+            <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="tentang.php">Tentang Kita</a>
@@ -53,9 +64,10 @@ if (!$artikel) {
         <section class="page-section">
             <h1><?= htmlspecialchars($artikel['judul']) ?></h1>
             <p><small>Oleh <?= htmlspecialchars($artikel['penulis']) ?> | <?= date('d M Y', strtotime($artikel['tanggal'])) ?></small></p>
-            <?php if (!empty($artikel['gambar'])): ?>
+            <?php $articleImage = $artikel['image'] ?? $artikel['gambar'] ?? ''; ?>
+            <?php if (!empty($articleImage)): ?>
                 <div style="margin-bottom: 24px;">
-                    <img src="<?= htmlspecialchars($artikel['gambar']) ?>" alt="<?= htmlspecialchars($artikel['judul']) ?>" style="width:100%;border-radius:16px;">
+                    <img src="<?= htmlspecialchars(article_image_url($articleImage) ?? '') ?>" alt="<?= htmlspecialchars($artikel['judul']) ?>" style="width:100%;border-radius:16px;">
                 </div>
             <?php endif; ?>
             <article>
@@ -69,7 +81,7 @@ if (!$artikel) {
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 WashWoosh. Semua hak dilindungi.</p>
+            <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?>. Semua hak dilindungi.</p>
         </div>
     </footer>
 </body>

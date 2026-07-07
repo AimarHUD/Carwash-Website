@@ -132,7 +132,7 @@ CREATE TABLE tb_artikel (
   id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   judul VARCHAR(255) NOT NULL,
   isi TEXT NOT NULL,
-  gambar VARCHAR(255) DEFAULT NULL,
+  image VARCHAR(255) DEFAULT NULL,
   penulis VARCHAR(100) NOT NULL,
   tanggal DATE NOT NULL,
   status ENUM('Draft','Publish') NOT NULL DEFAULT 'Draft',
@@ -143,7 +143,7 @@ INSERT INTO tb_admin (username, password, nama_lengkap, email, level) VALUES
 ('admin', '$2y$10$u8eLQH1TYqlBSA/quYVnJ.zDRCUWEvSMtNaxShKHpOYyHIeVQ2hnG', 'Administrator', 'admin@carwash.com', 'super');
 
 INSERT INTO tb_company_profile (nama_perusahaan, logo, alamat, no_telp, email, jam_operasional, deskripsi, visi, misi) VALUES
-('Carwash Dapa', NULL, 'Jl. Raya Dapa No.12, Jakarta', '081234567890', 'info@carwashdapa.com', 'Senin - Minggu 08:00 - 19:00', 'Layanan cuci mobil dan motor cepat, bersih, dan ramah lingkungan.', 'Menjadi carwash terbaik di wilayah Dapa.', 'Memberikan layanan berkualitas dengan harga terjangkau.');
+('WashWoosh', NULL, 'Jl. Raya Dapa No.12, Jakarta', '081234567890', 'info@washwoosh.com', 'Senin - Minggu 08:00 - 19:00', 'Layanan cuci mobil dan motor cepat, bersih, dan ramah lingkungan.', 'Menjadi washwoosh terbaik di wilayah Dapa.', 'Memberikan layanan berkualitas dengan harga terjangkau.');
 
 INSERT INTO tb_pelanggan (nama, no_hp, email, alamat) VALUES
 ('Budi Santoso', '081111222333', 'budi@example.com', 'Jl. Melati 5'),
