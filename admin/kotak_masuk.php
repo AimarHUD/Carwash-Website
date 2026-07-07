@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </div>
         <nav class="nav-links">
             <a href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
-            <a href="company_profile.php"><i class="bi bi-building"></i> Company Profile</a>
+            <a href="company_profile.php"><i class="bi bi-building"></i> Company Profile</a>    
             <a href="galeri.php"><i class="bi bi-journal-text"></i> Artikel</a>
             <a class="active" href="kotak_masuk.php"><i class="bi bi-envelope"></i> Kotak Masuk</a>
         </nav>

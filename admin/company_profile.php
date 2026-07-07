@@ -2,6 +2,66 @@
 require_once '../config/koneksi.php';
 require_once '../config/cek_session.php';
 $flash = get_flash_message();
+
+$company = [
+    'id' => null,
+    'nama_perusahaan' => 'WashWoosh',
+    'alamat' => '',
+    'no_telp' => '',
+    'email' => '',
+    'jam_operasional' => '',
+    'deskripsi' => '',
+    'visi' => '',
+    'misi' => '',
+];
+
+$stmt = $pdo->query('SELECT * FROM tb_company_profile ORDER BY updated_at DESC LIMIT 1');
+$companyRow = $stmt->fetch();
+if ($companyRow) {
+    $company = array_merge($company, $companyRow);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_company_profile'])) {
+    $data = [
+        'nama_perusahaan' => trim($_POST['nama_perusahaan'] ?? ''),
+        'alamat' => trim($_POST['alamat'] ?? ''),
+        'no_telp' => trim($_POST['no_telp'] ?? ''),
+        'email' => trim($_POST['email'] ?? ''),
+        'jam_operasional' => trim($_POST['jam_operasional'] ?? ''),
+        'deskripsi' => trim($_POST['deskripsi'] ?? ''),
+        'visi' => trim($_POST['visi'] ?? ''),
+        'misi' => trim($_POST['misi'] ?? ''),
+    ];
+
+    if ($data['nama_perusahaan'] === '' || $data['alamat'] === '' || $data['no_telp'] === '' || $data['email'] === '' || $data['jam_operasional'] === '') {
+        set_flash_message('Nama perusahaan, alamat, telepon, email, dan jam operasional wajib diisi.', 'danger');
+        header('Location: company_profile.php');
+        exit;
+    }
+
+    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        set_flash_message('Format email tidak valid.', 'danger');
+        header('Location: company_profile.php');
+        exit;
+    }
+
+    try {
+        if ($companyRow) {
+            $stmt = $pdo->prepare('UPDATE tb_company_profile SET nama_perusahaan=:nama_perusahaan, alamat=:alamat, no_telp=:no_telp, email=:email, jam_operasional=:jam_operasional, deskripsi=:deskripsi, visi=:visi, misi=:misi WHERE id=:id');
+            $stmt->execute([ ...$data, ':id' => $company['id'] ]);
+        } else {
+            $stmt = $pdo->prepare('INSERT INTO tb_company_profile (nama_perusahaan, alamat, no_telp, email, jam_operasional, deskripsi, visi, misi) VALUES (:nama_perusahaan, :alamat, :no_telp, :email, :jam_operasional, :deskripsi, :visi, :misi)');
+            $stmt->execute($data);
+        }
+
+        set_flash_message('Data company profile berhasil disimpan.', 'success');
+    } catch (PDOException $e) {
+        set_flash_message('Gagal menyimpan data company profile.', 'danger');
+    }
+
+    header('Location: company_profile.php');
+    exit;
+}
 ?>
 <!doctype html>
 <html lang="id">
@@ -192,6 +252,15 @@ $flash = get_flash_message();
             margin-bottom: 0.4rem;
         }
 
+        .form-control, .form-select, .form-textarea {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-textarea {
+            min-height: 110px;
+        }
+
         @media (max-width: 992px) {
             .page-wrapper {
                 flex-direction: column;
@@ -250,61 +319,76 @@ $flash = get_flash_message();
 
             <section class="hero-card">
                 <div class="hero-badge">✨ Layanan cuci kendaraan modern</div>
-                <h3>WashWoosh hadir untuk memberikan pengalaman cuci kendaraan yang cepat, bersih, dan nyaman.</h3>
-                <p class="mb-0">Kami menggabungkan teknologi, ketelitian, dan pelayanan ramah untuk menjaga kendaraan Anda tampil terbaik di setiap kunjungan.</p>
+                <h3><?= htmlspecialchars($company['nama_perusahaan']) ?> hadir untuk memberikan pengalaman cuci kendaraan yang cepat, bersih, dan nyaman.</h3>
+                <p class="mb-0">Kelola profil perusahaan Anda dengan data yang langsung tampil di website frontend WashWoosh.</p>
             </section>
 
             <div class="row g-4">
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                     <div class="panel-card h-100">
                         <div class="card-body">
-                            <h5 class="section-title">Tentang Kami</h5>
-                            <p class="muted mb-3">WashWoosh berdiri dengan tujuan memberikan layanan perawatan kendaraan berkualitas tinggi yang cepat dan terjangkau. Kami memadukan teknik manual terbaik dengan peralatan modern dan produk yang aman bagi kendaraan serta lingkungan.</p>
-
-                            <div class="row g-3 mt-2">
-                                <div class="col-md-6">
-                                    <div class="panel-card">
-                                        <div class="card-body">
-                                            <h6 class="section-title">Visi</h6>
-                                            <p class="muted mb-0">Menjadi layanan cuci kendaraan pilihan utama di kawasan kami dengan standar kebersihan dan kepuasan pelanggan terbaik.</p>
-                                        </div>
+                            <h5 class="section-title">Form Company Profile</h5>
+                            <form method="post" action="company_profile.php">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nama Perusahaan</label>
+                                        <input type="text" class="form-control" name="nama_perusahaan" value="<?= htmlspecialchars($company['nama_perusahaan']) ?>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">No. Telepon</label>
+                                        <input type="text" class="form-control" name="no_telp" value="<?= htmlspecialchars($company['no_telp']) ?>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($company['email']) ?>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Jam Operasional</label>
+                                        <input type="text" class="form-control" name="jam_operasional" value="<?= htmlspecialchars($company['jam_operasional']) ?>" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Alamat</label>
+                                        <textarea class="form-control" name="alamat" rows="3" required><?= htmlspecialchars($company['alamat']) ?></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Deskripsi</label>
+                                        <textarea class="form-control" name="deskripsi" rows="3"><?= htmlspecialchars($company['deskripsi']) ?></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Visi</label>
+                                        <textarea class="form-control" name="visi" rows="2"><?= htmlspecialchars($company['visi']) ?></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Misi</label>
+                                        <textarea class="form-control" name="misi" rows="2"><?= htmlspecialchars($company['misi']) ?></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="panel-card">
-                                        <div class="card-body">
-                                            <h6 class="section-title">Misi</h6>
-                                            <ul class="feature-list">
-                                                <li>Menyediakan layanan cepat dan andal</li>
-                                                <li>Menggunakan produk ramah lingkungan</li>
-                                                <li>Memberikan pelayanan yang transparan</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <button type="submit" name="save_company_profile" class="btn btn-primary mt-4">Simpan Profil</button>
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <div class="panel-card mb-4">
                         <div class="card-body">
-                            <h5 class="section-title">Kontak</h5>
-                            <p class="muted mb-2"><strong>Alamat:</strong><br>Jl. Contoh No.123, Kecamatan Pesanggrahan</p>
-                            <p class="muted mb-2"><strong>Telepon:</strong><br>+62 875325539872</p>
-                            <p class="muted mb-0"><strong>Email:</strong><br>info@washwoosh.com</p>
+                            <h5 class="section-title">Preview Website</h5>
+                            <p class="muted mb-2"><strong>Nama:</strong><br><?= htmlspecialchars($company['nama_perusahaan']) ?></p>
+                            <p class="muted mb-2"><strong>Alamat:</strong><br><?= htmlspecialchars($company['alamat'] ?: '-') ?></p>
+                            <p class="muted mb-2"><strong>Telepon:</strong><br><?= htmlspecialchars($company['no_telp'] ?: '-') ?></p>
+                            <p class="muted mb-2"><strong>Email:</strong><br><?= htmlspecialchars($company['email'] ?: '-') ?></p>
+                            <p class="muted mb-0"><strong>Jam Operasional:</strong><br><?= htmlspecialchars($company['jam_operasional'] ?: '-') ?></p>
                         </div>
                     </div>
 
                     <div class="panel-card">
                         <div class="card-body">
-                            <h5 class="section-title">Layanan Unggulan</h5>
+                            <h5 class="section-title">Informasi Singkat</h5>
+                            <p class="muted mb-2">Data yang Anda simpan akan langsung tampil di halaman depan website WashWoosh.</p>
                             <ul class="feature-list">
-                                <li>Cuci eksterior & interior</li>
-                                <li>Salon dan pengkilap</li>
-                                <li>Waxing & coating</li>
-                                <li>Perawatan mesin ringan</li>
+                                <li>Branding perusahaan</li>
+                                <li>Kontak dan jam operasional</li>
+                                <li>Visi serta misi bisnis</li>
                             </ul>
                         </div>
                     </div>

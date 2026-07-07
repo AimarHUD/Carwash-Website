@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
 
 $flash = get_flash_message();
@@ -50,13 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_contact'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontak WashWoosh</title>
+    <title>Kontak <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container header-inner">
-            <a class="logo" href="index.php">WashWoosh</a>
+            <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="tentang.php">Tentang Kita</a>
@@ -103,20 +104,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_contact'])) {
             <div class="contact-card contact-info">
                 <h2>Informasi Kontak</h2>
                 <div class="info-block">
-                    <p><strong>Email:</strong> info@washwoosh.com</p>
-                    <p><strong>Telepon:</strong> +62 812-3456-7890</p>
-                    <p><strong>Alamat:</strong> Jl. Melati No. 12, Bandung, Jawa Barat</p>
+                    <p><strong>Email:</strong> <?= htmlspecialchars($company['email'] ?? '-') ?></p>
+                    <p><strong>Telepon:</strong> <?= htmlspecialchars($company['no_telp'] ?? '-') ?></p>
+                    <p><strong>Alamat:</strong> <?= htmlspecialchars($company['alamat'] ?? '-') ?></p>
                 </div>
 
                 <div class="info-block">
                     <h3>Lokasi Kami</h3>
-                    <p>WashWoosh berada di pusat kota dengan akses mudah dari berbagai ruas jalan utama. Kunjungi kami untuk layanan cuci kendaraan profesional dan nyaman.</p>
+                    <p><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?> berada di pusat kota dengan akses mudah dari berbagai ruas jalan utama. Kunjungi kami untuk layanan cuci kendaraan profesional dan nyaman.</p>
                 </div>
 
                 <div class="map-card">
                     <p>Lokasi fisik:</p>
-                    <p>Jl. Melati No. 12, Bandung</p>
-                    <p>Koordinat: -6.9175, 107.6191</p>
+                    <p><?= htmlspecialchars($company['alamat'] ?? '-') ?></p>
+                    <p>Jam operasional: <?= htmlspecialchars($company['jam_operasional'] ?? '-') ?></p>
                 </div>
             </div>
         </div>
@@ -124,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_contact'])) {
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 WashWoosh. Semua hak dilindungi.</p>
+            <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?>. Semua hak dilindungi.</p>
         </div>
     </footer>
 

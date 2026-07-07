@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
 
 $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
@@ -21,13 +22,13 @@ $articles = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikel WashWoosh</title>
+    <title>Artikel <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header class="site-header">
         <div class="container header-inner">
-            <a class="logo" href="index.php">WashWoosh</a>
+            <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
             <nav class="site-nav">
                 <a href="index.php">Home</a>
                 <a href="tentang.php">Tentang Kita</a>
@@ -61,7 +62,7 @@ $articles = $stmt->fetchAll();
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 WashWoosh. Semua hak dilindungi.</p>
+            <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?>. Semua hak dilindungi.</p>
         </div>
     </footer>
 </body>
