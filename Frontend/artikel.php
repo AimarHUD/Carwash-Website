@@ -92,6 +92,7 @@ function article_summary(string $content, int $limit = 120): string
 </head>
 <body>
 
+
     <header class="site-header py-3">
         <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
             <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
@@ -105,6 +106,17 @@ function article_summary(string $content, int $limit = 120): string
                 <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
                 <a class="text-decoration-none text-primary" href="artikel.php">Artikel</a>
                 <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
+
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
+            <nav class="site-nav">
+                <a href="index.php">Home</a>
+                <a href="tentang.php">Tentang Kami</a>
+                <a href="service.php">Layanan Kami</a>
+                <a href="artikel.php">Artikel</a>
+                <a href="kontak.php">Kontak Kami</a>
 
             </nav>
         </div>
