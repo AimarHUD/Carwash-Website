@@ -132,7 +132,7 @@ $flash = get_flash_message();
             <div class="collapse navbar-collapse" id="topNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="layanan.php">Company Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../Frontend/index.php">Company Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
                     <li class="nav-item"><a class="nav-link" href="company_profile.php">Form</a></li>
                     <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
