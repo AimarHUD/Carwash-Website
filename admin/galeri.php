@@ -2,23 +2,116 @@
 require_once '../config/koneksi.php';
 require_once '../config/cek_session.php';
 
+function ensure_article_upload_directory(string $directory): void
+{
+    if (!is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
+}
+
+function ensure_article_image_column(PDO $pdo): void
+{
+    $tableExists = (bool) $pdo->query("SHOW TABLES LIKE 'tb_artikel'")->fetchColumn();
+
+    if (!$tableExists) {
+        $pdo->exec('CREATE TABLE tb_artikel (
+            id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            judul VARCHAR(255) NOT NULL,
+            isi TEXT NOT NULL,
+            image VARCHAR(255) DEFAULT NULL,
+            penulis VARCHAR(100) NOT NULL,
+            tanggal DATE NOT NULL,
+            status ENUM("Draft","Publish") NOT NULL DEFAULT "Draft",
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+    }
+
+    $columnExists = (bool) $pdo->query("SHOW COLUMNS FROM tb_artikel LIKE 'image'")->fetchColumn();
+    if (!$columnExists) {
+        $pdo->exec('ALTER TABLE tb_artikel ADD COLUMN image VARCHAR(255) DEFAULT NULL AFTER isi');
+    }
+
+    $legacyColumnExists = (bool) $pdo->query("SHOW COLUMNS FROM tb_artikel LIKE 'gambar'")->fetchColumn();
+    if ($legacyColumnExists) {
+        $pdo->exec("UPDATE tb_artikel
+            SET image = gambar
+            WHERE (image IS NULL OR image = '')
+              AND gambar IS NOT NULL
+              AND gambar <> ''");
+    }
+}
+
+function resolve_article_file_url(?string $relativePath, string $prefix = '../'): ?string
+{
+    $relativePath = trim((string) $relativePath);
+    if ($relativePath === '') {
+        return null;
+    }
+
+    return $prefix . ltrim(str_replace('\\', '/', $relativePath), '/');
+}
+
+function delete_article_file(?string $relativePath): void
+{
+    $relativePath = trim((string) $relativePath);
+    if ($relativePath === '') {
+        return;
+    }
+
+    $fullPath = dirname(__DIR__) . '/' . ltrim(str_replace('\\', '/', $relativePath), '/');
+    if (is_file($fullPath)) {
+        @unlink($fullPath);
+    }
+}
+
+function upload_article_image(array $file): ?string
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('Upload gambar gagal.');
+    }
+
+    if (($file['size'] ?? 0) > 2 * 1024 * 1024) {
+        throw new RuntimeException('Ukuran file maksimal 2 MB.');
+    }
+
+    $allowedMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($file['tmp_name']);
+
+    if (!isset($allowedMimeTypes[$mimeType])) {
+        throw new RuntimeException('Format gambar harus JPG, JPEG, PNG, atau WEBP.');
+    }
+
+    $uploadDirectory = dirname(__DIR__) . '/uploads/articles';
+    ensure_article_upload_directory($uploadDirectory);
+
+    $filename = bin2hex(random_bytes(16)) . '.' . $allowedMimeTypes[$mimeType];
+    $destination = $uploadDirectory . '/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new RuntimeException('Gagal menyimpan file gambar.');
+    }
+
+    return 'uploads/articles/' . $filename;
+}
+
+ensure_article_image_column($pdo);
+
 try {
     $pdo->query('SELECT 1 FROM tb_artikel LIMIT 1');
 } catch (PDOException $e) {
-    $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
-        id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        judul VARCHAR(255) NOT NULL,
-        isi TEXT NOT NULL,
-        gambar VARCHAR(255) DEFAULT NULL,
-        penulis VARCHAR(100) NOT NULL,
-        tanggal DATE NOT NULL,
-        status ENUM("Draft","Publish") NOT NULL DEFAULT "Draft",
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
-
-    $pdo->exec("INSERT INTO tb_artikel (judul, isi, gambar, penulis, tanggal, status) VALUES
-        ('Tips Merawat Mobil Setelah Cuci', 'Jaga kilap mobil tetap maksimal dengan langkah sederhana setelah proses pencucian.', 'uploads/artikel-1.jpg', 'Admin WashWoosh', CURDATE(), 'Publish'),
-        ('Kenapa Cuci Mobil Rutin Itu Penting', 'Cuci kendaraan secara rutin membantu menjaga warna cat tetap terjaga dan mencegah penumpukan kotoran.', 'uploads/artikel-2.jpg', 'Admin WashWoosh', CURDATE(), 'Draft')");
+    $pdo->exec("INSERT INTO tb_artikel (judul, isi, image, penulis, tanggal, status) VALUES
+        ('Tips Merawat Mobil Setelah Cuci', 'Jaga kilap mobil tetap maksimal dengan langkah sederhana setelah proses pencucian.', NULL, 'Admin WashWoosh', CURDATE(), 'Publish'),
+        ('Kenapa Cuci Mobil Rutin Itu Penting', 'Cuci kendaraan secara rutin membantu menjaga warna cat tetap terjaga dan mencegah penumpukan kotoran.', NULL, 'Admin WashWoosh', CURDATE(), 'Draft')");
 }
 
 $flash = get_flash_message();
@@ -34,6 +127,15 @@ if ($editId > 0) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'delete' && !empty($_POST['id_artikel'])) {
         $id = (int)$_POST['id_artikel'];
+
+        $stmt = $pdo->prepare('SELECT * FROM tb_artikel WHERE id_artikel = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $existingArticle = $stmt->fetch();
+
+        if ($existingArticle) {
+            delete_article_file($existingArticle['image'] ?? $existingArticle['gambar'] ?? null);
+        }
+
         $stmt = $pdo->prepare('DELETE FROM tb_artikel WHERE id_artikel = :id');
         $stmt->execute(['id' => $id]);
         set_flash_message('Artikel berhasil dihapus', 'success');
@@ -45,10 +147,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = isset($_POST['id_artikel']) ? (int)$_POST['id_artikel'] : 0;
         $judul = trim($_POST['judul'] ?? '');
         $isi = trim($_POST['isi'] ?? '');
-        $gambar = trim($_POST['gambar'] ?? '');
         $penulis = trim($_POST['penulis'] ?? '');
         $tanggal = trim($_POST['tanggal'] ?? date('Y-m-d'));
         $status = trim($_POST['status'] ?? 'Draft');
+        $existingImage = null;
+
+        if ($id > 0) {
+            $stmt = $pdo->prepare('SELECT * FROM tb_artikel WHERE id_artikel = :id LIMIT 1');
+            $stmt->execute(['id' => $id]);
+            $existingArticle = $stmt->fetch();
+            $existingImage = $existingArticle['image'] ?? $existingArticle['gambar'] ?? null;
+        }
 
         if ($judul === '' || $isi === '' || $penulis === '') {
             set_flash_message('Judul, isi, dan penulis wajib diisi.', 'danger');
@@ -56,13 +165,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        $uploadedImage = null;
+        try {
+            $uploadedImage = upload_article_image($_FILES['image'] ?? []);
+        } catch (RuntimeException $exception) {
+            set_flash_message($exception->getMessage(), 'danger');
+            header('Location: galeri.php' . ($id > 0 ? '?edit=' . $id : ''));
+            exit;
+        }
+
+        $imagePath = $uploadedImage ?: $existingImage;
+
         if ($id > 0) {
-            $stmt = $pdo->prepare('UPDATE tb_artikel SET judul = :judul, isi = :isi, gambar = :gambar, penulis = :penulis, tanggal = :tanggal, status = :status WHERE id_artikel = :id');
-            $stmt->execute(['judul' => $judul, 'isi' => $isi, 'gambar' => $gambar, 'penulis' => $penulis, 'tanggal' => $tanggal, 'status' => $status, 'id' => $id]);
+            $stmt = $pdo->prepare('UPDATE tb_artikel SET judul = :judul, isi = :isi, image = :image, penulis = :penulis, tanggal = :tanggal, status = :status WHERE id_artikel = :id');
+            $stmt->execute(['judul' => $judul, 'isi' => $isi, 'image' => $imagePath, 'penulis' => $penulis, 'tanggal' => $tanggal, 'status' => $status, 'id' => $id]);
+            if ($uploadedImage && !empty($existingImage) && $existingImage !== $uploadedImage) {
+                delete_article_file($existingImage);
+            }
             set_flash_message('Artikel berhasil diperbarui', 'success');
         } else {
-            $stmt = $pdo->prepare('INSERT INTO tb_artikel (judul, isi, gambar, penulis, tanggal, status) VALUES (:judul, :isi, :gambar, :penulis, :tanggal, :status)');
-            $stmt->execute(['judul' => $judul, 'isi' => $isi, 'gambar' => $gambar, 'penulis' => $penulis, 'tanggal' => $tanggal, 'status' => $status]);
+            $stmt = $pdo->prepare('INSERT INTO tb_artikel (judul, isi, image, penulis, tanggal, status) VALUES (:judul, :isi, :image, :penulis, :tanggal, :status)');
+            $stmt->execute(['judul' => $judul, 'isi' => $isi, 'image' => $imagePath, 'penulis' => $penulis, 'tanggal' => $tanggal, 'status' => $status]);
             set_flash_message('Artikel berhasil ditambahkan', 'success');
         }
 
@@ -205,7 +328,7 @@ $articles = $stmt->fetchAll();
                 <div class="col-lg-4">
                     <div class="panel-card p-3">
                         <h5 class="mb-3"><?= $article ? 'Edit Artikel' : 'Tambah Artikel Baru' ?></h5>
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="save">
                             <?php if ($article): ?><input type="hidden" name="id_artikel" value="<?= (int)$article['id_artikel'] ?>">
                             <?php endif; ?>
@@ -218,8 +341,15 @@ $articles = $stmt->fetchAll();
                                 <textarea class="form-control" name="isi" rows="7" required><?= htmlspecialchars($article['isi'] ?? '') ?></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Gambar (opsional)</label>
-                                <input type="text" class="form-control" name="gambar" value="<?= htmlspecialchars($article['gambar'] ?? '') ?>" placeholder="uploads/artikel.jpg">
+                                <label class="form-label">Upload Gambar</label>
+                                <?php $currentImage = $article['image'] ?? $article['gambar'] ?? ''; ?>
+                                <?php if (!empty($currentImage)): ?>
+                                    <div class="mb-2">
+                                        <img src="<?= htmlspecialchars(resolve_article_file_url($currentImage) ?? '') ?>" alt="Preview gambar artikel" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid var(--border);">
+                                    </div>
+                                <?php endif; ?>
+                                <input type="file" class="form-control" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                                <div class="form-text">Format: JPG, JPEG, PNG, WEBP. Maksimal 2 MB.</div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Penulis</label>
@@ -251,6 +381,7 @@ $articles = $stmt->fetchAll();
                                     <thead class="table-light">
                                         <tr>
                                             <th>#</th>
+                                            <th>Gambar</th>
                                             <th>Judul</th>
                                             <th>Status</th>
                                             <th>Tanggal</th>
@@ -260,8 +391,16 @@ $articles = $stmt->fetchAll();
                                     <tbody>
                                         <?php if ($articles): ?>
                                             <?php foreach ($articles as $index => $item): ?>
+                                                <?php $itemImage = $item['image'] ?? $item['gambar'] ?? ''; ?>
                                                 <tr>
                                                     <td><?= $index + 1 ?></td>
+                                                    <td>
+                                                        <?php if (!empty($itemImage)): ?>
+                                                            <img src="<?= htmlspecialchars(resolve_article_file_url($itemImage) ?? '') ?>" alt="<?= htmlspecialchars($item['judul']) ?>" style="width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--border);">
+                                                        <?php else: ?>
+                                                            <span class="text-muted">-</span>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td>
                                                         <strong><?= htmlspecialchars($item['judul']) ?></strong><br>
                                                         <small class="text-muted">Oleh <?= htmlspecialchars($item['penulis']) ?></small>
@@ -284,7 +423,7 @@ $articles = $stmt->fetchAll();
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="5" class="text-center py-4 text-muted">Belum ada artikel.</td>
+                                                <td colspan="6" class="text-center py-4 text-muted">Belum ada artikel.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

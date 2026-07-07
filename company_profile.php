@@ -14,20 +14,20 @@
 <div class="container py-4">
     <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 shadow-sm rounded">
         <div class="container-fluid">
-            <a class="navbar-brand brand" href="index.php">Carwash Dapa</a>
+            <a class="navbar-brand brand" href="Frontend/index.php">Carwash Dapa</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
                     aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="index.php">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="company_profile.php">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Frontend/index.php">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="Frontend/tentang.php">Tentang Kami</a></li>
                     <li class="nav-item"><a class="nav-link" href="login.php">Masuk</a></li>
                 </ul>
                 <div class="d-flex align-items-center">
-                    <a class="btn btn-outline-primary me-2" href="login.php">Booking</a>
-                    <a class="btn btn-primary" href="contact.php">Kontak</a>
+                    <a class="btn btn-outline-primary me-2" href="Frontend/kontak.php">Booking</a>
+                    <a class="btn btn-primary" href="Frontend/kontak.php">Kontak</a>
                 </div>
             </div>
         </div>

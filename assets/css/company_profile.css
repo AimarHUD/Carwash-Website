@@ -1,68 +1,119 @@
-/* Company Profile styles */
-:root{
-    --primary:#0d6efd;
-    --accent:#33b5ff;
-    --muted:#6c757d;
-    --card-bg: #ffffff;
+:root {
+    --primary: #0d6efd;
+    --secondary: #0f172a;
+    --bg: #f5f9ff;
+    --card: #ffffff;
+    --text: #1e293b;
 }
-body{
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    color:#222;
-    -webkit-font-smoothing:antialiased;
-}
-.hero{
-    position:relative;
-    overflow:hidden;
-    background: linear-gradient(180deg, rgba(13,110,253,0.95) 0%, rgba(51,181,255,0.95) 100%);
-    color:#fff;
-    border-radius:14px;
-    box-shadow: 0 20px 60px rgba(13,110,253,0.12);
-}
-.hero::after{
-    content:'';
-    position:absolute;
-    right:-10%;
-    top:-20%;
-    width:520px;
-    height:520px;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.08), transparent 40%);
-    transform:rotate(18deg);
-}
-.hero .display-5{font-weight:800;letter-spacing:0.02em}
-.lead{opacity:0.95}
 
-.card-soft{
-    background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.98));
-    border-radius:12px;
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--text);
+    background: linear-gradient(180deg, #f8fbff 0%, #eef7ff 100%);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    width: min(1120px, calc(100% - 32px));
+}
+
+.navbar {
+    border-radius: 24px;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    color: var(--secondary) !important;
+}
+
+.navbar .nav-link {
+    color: #475569;
+    font-weight: 600;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+    color: var(--primary);
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0d6efd, #2fb7ff);
+    color: #fff;
+    border-radius: 28px;
+    padding: 56px 24px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    right: -8%;
+    top: -18%;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.14), transparent 62%);
+    pointer-events: none;
+}
+
+.hero .display-5 {
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.hero .lead {
+    opacity: 0.96;
+}
+
+.card-soft {
+    background: var(--card);
+    color: var(--text);
     border: none;
-    box-shadow: 0 8px 30px rgba(31,138,255,0.06);
-    transition: transform .22s ease, box-shadow .22s ease;
-}
-.card-soft:hover{transform: translateY(-6px); box-shadow: 0 20px 50px rgba(31,138,255,0.10)}
-
-h4{color:var(--primary);font-weight:700}
-
-.service-list li{padding:6px 0;}
-
-.contact-card{border-left:4px solid var(--primary)}
-
-.btn-cta{
-    background: linear-gradient(90deg,var(--primary),var(--accent));
-    border: none;color:white;border-radius:10px;padding:10px 16px;font-weight:600;box-shadow:0 8px 24px rgba(13,110,253,0.12);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.feature{
-    display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(13,110,253,0.03), rgba(51,181,255,0.01));
-}
-.feature .icon{width:48px;height:48px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-size:20px}
-
-@media (max-width:768px){
-    .feature-grid{grid-template-columns:1fr}
-    .hero{padding:2.5rem 1.25rem}
+.card-soft h4,
+.card-soft h5,
+.card-soft h6 {
+    color: var(--secondary);
+    font-weight: 700;
 }
 
-.fade-in{opacity:0;transform:translateY(6px);animation:fadeInUp .6s forwards}
-@keyframes fadeInUp{to{opacity:1;transform:none}}
+.row.g-3 {
+    margin-bottom: 1rem;
+}
 
-footer{text-align:center;padding:2rem 0;color:var(--muted)}
+ul {
+    padding-left: 1.15rem;
+}
+
+footer {
+    color: #64748b;
+    padding-bottom: 1.5rem;
+}
+
+@media (max-width: 760px) {
+    .navbar .d-flex {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        padding: 40px 18px;
+    }
+}
