@@ -4,122 +4,316 @@ require_once '../config/cek_session.php';
 $flash = get_flash_message();
 ?>
 <!doctype html>
-<html lang="id">    
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Company Profile - Carwash Dapa</title>
+    <title>Company Profile - WashWoosh</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../assets/css/company_profile.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(180deg, #fbfdff 0%, #ffffff 100%); min-height:100vh; }
-        .hero { background: linear-gradient(135deg,#0d6efd 0%, #33b5ff 100%); color:#fff; padding:3rem 0; border-radius:12px; }
-        .card-soft { background: rgba(255,255,255,0.96); border: 1px solid #eee; box-shadow: 0 6px 20px rgba(13,110,253,0.04); }
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0b5ed7;
+            --bg: #f4f8ff;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5ecf6;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f4f8ff 0%, #eef6ff 100%);
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+        }
+
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            color: #fff;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.4rem 0.4rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #3ab7ff 100%);
+            font-size: 1.3rem;
+            box-shadow: 0 10px 24px rgba(13, 110, 253, 0.25);
+        }
+
+        .brand h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .brand small {
+            color: rgba(255,255,255,0.72);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.84);
+            text-decoration: none;
+            padding: 0.8rem 0.9rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .topbar p {
+            margin: 0.2rem 0 0;
+            color: var(--muted);
+        }
+
+        .content {
+            padding: 1.5rem;
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #38bdf8 100%);
+            color: #fff;
+            border-radius: 24px;
+            padding: 1.6rem;
+            box-shadow: 0 18px 40px rgba(13, 110, 253, 0.18);
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-card h3 {
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 0.8rem;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 999px;
+            font-size: 0.9rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .panel-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .panel-card .card-body {
+            padding: 1.2rem 1.25rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .feature-list {
+            padding-left: 1rem;
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .feature-list li {
+            margin-bottom: 0.4rem;
+        }
+
+        @media (max-width: 992px) {
+            .page-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .nav-links {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .nav-links a {
+                flex: 1 1 180px;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="container py-4">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 border-bottom border-white border-opacity-10">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="dashboard.php">Carwash Dapa</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
-                    aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="topNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="company_profile.php">Company Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
-                    <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
-                </ul>
-                <a class="btn btn-outline-light" href="../logout.php">Logout</a>
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">🚗</div>
+            <div>
+                <h4>WashWoosh</h4>
+                <small>Admin Panel</small>
             </div>
         </div>
-    </nav>
 
-    <?php if ($flash): ?>
-        <div class="alert alert-<?= $flash['type'] === 'success' ? 'success' : 'danger' ?> alert-dismissible fade show" role="alert">
-            <?= htmlspecialchars($flash['message']) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <nav class="nav-links">
+            <a href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a class="active" href="company_profile.php"><i class="bi bi-building"></i> Company Profile</a>
+            <a href="galeri.php"><i class="bi bi-journal-text"></i> Artikel</a>
+            <a href="kotak_masuk.php"><i class="bi bi-envelope"></i> Kotak Masuk</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a class="btn btn-outline-light btn-sm w-100" href="../logout.php">Logout</a>
         </div>
-    <?php endif; ?>
+    </aside>
 
-    <section class="hero p-4 mb-4 rounded">
-        <div class="container text-center">
-            <h1 class="display-6 fw-bold">Carwash Dapa</h1>
-            <p class="lead mb-0">Solusi cepat, ramah lingkungan, dan profesional untuk semua kebutuhan cuci kendaraan Anda.</p>
-        </div>
-    </section>
+    <div class="main-panel">
+        <header class="topbar">
+            <div>
+                <h2>Company Profile</h2>
+                <p>Kelola dan tampilkan identitas perusahaan secara profesional.</p>
+            </div>
+        </header>
 
-    <div class="row g-3">
-        <div class="col-md-8">
-            <div class="card card-soft p-4">
-                <h4>Tentang Kami</h4>
-                <p class="text-muted">Carwash Dapa berdiri dengan tujuan memberikan layanan perawatan kendaraan berkualitas tinggi yang cepat dan terjangkau. Kami memadukan teknik manual terbaik dengan peralatan modern yang ramah lingkungan.</p>
+        <main class="content">
+            <?php if ($flash): ?>
+                <div class="alert alert-<?= $flash['type'] === 'success' ? 'success' : 'danger' ?> alert-dismissible fade show mb-4" role="alert">
+                    <?= htmlspecialchars($flash['message']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
 
-                <h5 class="mt-4">Visi</h5>
-                <p class="text-muted">Menjadi layanan cuci kendaraan pilihan utama di kawasan kami dengan standar kebersihan dan kepuasan pelanggan terbaik.</p>
+            <section class="hero-card">
+                <div class="hero-badge">✨ Layanan cuci kendaraan modern</div>
+                <h3>WashWoosh hadir untuk memberikan pengalaman cuci kendaraan yang cepat, bersih, dan nyaman.</h3>
+                <p class="mb-0">Kami menggabungkan teknologi, ketelitian, dan pelayanan ramah untuk menjaga kendaraan Anda tampil terbaik di setiap kunjungan.</p>
+            </section>
 
-                <h5 class="mt-4">Misi</h5>
-                <ul>
-                    <li>Menyediakan layanan cepat dan andal untuk semua jenis kendaraan.</li>
-                    <li>Menggunakan produk yang aman bagi kendaraan dan lingkungan.</li>
-                    <li>Memberikan pengalaman pelanggan yang ramah dan transparan.</li>
-                </ul>
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="panel-card h-100">
+                        <div class="card-body">
+                            <h5 class="section-title">Tentang Kami</h5>
+                            <p class="muted mb-3">WashWoosh berdiri dengan tujuan memberikan layanan perawatan kendaraan berkualitas tinggi yang cepat dan terjangkau. Kami memadukan teknik manual terbaik dengan peralatan modern dan produk yang aman bagi kendaraan serta lingkungan.</p>
 
-                <h5 class="mt-4">Layanan Unggulan</h5>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <ul>
-                            <li>Cuci Eksterior</li>
-                            <li>Cuci Interior</li>
-                            <li>Salon dan Pengkilap</li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6">
-                        <ul>
-                            <li>Waxing & Coating</li>
-                            <li>Perawatan Aksesoris</li>
-                            <li>Perawatan Mesin Ringan</li>
-                        </ul>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <div class="panel-card">
+                                        <div class="card-body">
+                                            <h6 class="section-title">Visi</h6>
+                                            <p class="muted mb-0">Menjadi layanan cuci kendaraan pilihan utama di kawasan kami dengan standar kebersihan dan kepuasan pelanggan terbaik.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="panel-card">
+                                        <div class="card-body">
+                                            <h6 class="section-title">Misi</h6>
+                                            <ul class="feature-list">
+                                                <li>Menyediakan layanan cepat dan andal</li>
+                                                <li>Menggunakan produk ramah lingkungan</li>
+                                                <li>Memberikan pelayanan yang transparan</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <h5 class="mt-4">Keunggulan Kami</h5>
-                <ul>
-                    <li>Staff terlatih dan berpengalaman</li>
-                    <li>Proses cepat dan efisien</li>
-                    <li>Produk ramah lingkungan</li>
-                </ul>
-            </div>
-        </div>
+                <div class="col-lg-4">
+                    <div class="panel-card mb-4">
+                        <div class="card-body">
+                            <h5 class="section-title">Kontak</h5>
+                            <p class="muted mb-2"><strong>Alamat:</strong><br>Jl. Contoh No.123, Kecamatan Pesanggrahan</p>
+                            <p class="muted mb-2"><strong>Telepon:</strong><br>+62 875325539872</p>
+                            <p class="muted mb-0"><strong>Email:</strong><br>info@washwoosh.com</p>
+                        </div>
+                    </div>
 
-        <div class="col-md-4">
-            <div class="card card-soft p-3 mb-3">
-                <h6>Kontak</h6>
-                <p class="mb-1"><strong>Alamat:</strong><br> Jl. Contoh No.123, Kecamatan Dapa</p>
-                <p class="mb-1"><strong>Telepon:</strong><br> +62 812 3456 7890</p>
-                <p class="mb-0"><strong>Email:</strong><br> info@carwashdapa.local</p>
+                    <div class="panel-card">
+                        <div class="card-body">
+                            <h5 class="section-title">Layanan Unggulan</h5>
+                            <ul class="feature-list">
+                                <li>Cuci eksterior & interior</li>
+                                <li>Salon dan pengkilap</li>
+                                <li>Waxing & coating</li>
+                                <li>Perawatan mesin ringan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="card card-soft p-3 mb-3">
-                <h6>Jam Operasional</h6>
-                <ul class="mb-0">
-                    <li>Senin - Jumat: 08:00 - 18:00</li>
-                    <li>Sabtu: 08:00 - 16:00</li>
-                    <li>Minggu: Tutup</li>
-                </ul>
-            </div>
-
-            <div class="card card-soft p-3">
-                <h6>Media Sosial</h6>
-                <p class="mb-0">Ikuti kami di Instagram dan Facebook: <br>@carwashdapa</p>
-            </div>
-        </div>
+        </main>
     </div>
-
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

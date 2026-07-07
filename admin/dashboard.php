@@ -38,132 +38,234 @@ $flash = get_flash_message();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Admin - Carwash Dapa</title>
+    <title>Dashboard Admin - Carwash Woosh</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0b5ed7;
+            --bg: #f4f8ff;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5ecf6;
+        }
+
         body {
             min-height: 100vh;
-            background: linear-gradient(180deg, #eef4ff 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #f4f8ff 0%, #eef6ff 100%);
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
         }
-        .hero-banner {
-            position: relative;
-            background: radial-gradient(circle at top, rgba(255,255,255,0.24), transparent 30%),
-                linear-gradient(135deg, #0d6efd 0%, #1f8aff 45%, #33b5ff 100%);
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+        }
+
+        .sidebar {
+            width: 270px;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
             color: #fff;
-            overflow: hidden;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
-        .hero-banner::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-            opacity: 0.16;
-            filter: blur(2px);
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.4rem 0.4rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
         }
-        .hero-banner .container {
-            position: relative;
-            z-index: 2;
-        }
-        .hero-card {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.18);
-            backdrop-filter: blur(10px);
-        }
-        .hero-title {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-        .hero-title span {
-            color: #ffd43b;
-        }
-        .interactive-text {
-            display: inline-flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-        .interactive-text span {
-            padding: 0.55rem 1rem;
-            border: 1px solid rgba(255,255,255,0.35);
-            border-radius: 999px;
-            transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
-            cursor: default;
-        }
-        .interactive-text span:hover,
-        .interactive-text span.active {
-            transform: translateY(-4px);
-            background: rgba(255,255,255,0.18);
-            color: #fff;
-        }
-        .car-icon {
-            width: 200px;
-            height: 200px;
-            border-radius: 40px;
-            background: rgba(255,255,255,0.12);
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
-            margin-top: 2rem;
-            border: 1px solid rgba(255,255,255,0.24);
-            box-shadow: 0 20px 60px rgba(13, 110, 253, 0.18);
+            background: linear-gradient(135deg, var(--primary) 0%, #3ab7ff 100%);
+            font-size: 1.3rem;
+            box-shadow: 0 10px 24px rgba(13, 110, 253, 0.25);
         }
-        .navbar-brand {
+
+        .brand h4 {
+            margin: 0;
+            font-size: 1.1rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
         }
-        .dashboard-pill {
-            background: rgba(13,110,253,0.1);
-            color: #0d6efd;
+
+        .brand small {
+            color: rgba(255,255,255,0.72);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.84);
+            text-decoration: none;
+            padding: 0.8rem 0.9rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .topbar p {
+            margin: 0.2rem 0 0;
+            color: var(--muted);
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            padding: 0.55rem 0.8rem;
+            border-radius: 999px;
+            background: #eaf3ff;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+
+        .content {
+            padding: 1.5rem;
+        }
+
+        .content-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .stat-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .hero-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 992px) {
+            .page-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .nav-links {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .nav-links a {
+                flex: 1 1 180px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom border-white border-opacity-10">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
-                aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="topNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="company_profile.php">Company Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pembayaran.php">Table</a></li>
-                    <li class="nav-item"><a class="nav-link" href="kontak_masuk.php">Kontak Masuk</a></li>
-                    <li class="nav-item"><a class="nav-link" href="galeri.php">Artikel</a></li>
-                </ul>
-                <a class="btn btn-outline-light" href="../logout.php">Logout</a>
-            </div>
-        </div>
-    </nav>
-
-    <main id="dashboard-content" class="container py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+<div class="page-wrapper">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">🚗</div>
             <div>
-                <h2 class="h4 mb-1">Dashboard</h2>
-                <p class="text-muted mb-0">Selamat datang, <?= htmlspecialchars($_SESSION['nama_lengkap']) ?>. Pantau transaksi dan performa layanan carwash Anda di sini.</p>
-            </div>
-            <div class="text-end">
-                <span class="badge rounded-pill bg-primary">Tema Mobil</span>
+                <h4>WashWoosh</h4>
+                <small>Admin Panel</small>
             </div>
         </div>
 
-        <?php if ($flash): ?>
-            <div class="alert alert-<?= $flash['type'] === 'success' ? 'success' : 'danger' ?> alert-dismissible fade show" role="alert">
-                <?= htmlspecialchars($flash['message']) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php endif; ?>
+        <nav class="nav-links">
+            <a class="active" href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
+            <a href="company_profile.php"><i class="bi bi-building"></i> Company Profile</a>
+            <a href="galeri.php"><i class="bi bi-journal-text"></i> Artikel</a>
+            <a href="kotak_masuk.php"><i class="bi bi-envelope"></i> Kotak Masuk</a>
+        </nav>
 
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body">
+        <div class="sidebar-footer">
+            <a class="btn btn-outline-light btn-sm w-100" href="../logout.php">Logout</a>
+        </div>
+    </aside>
+
+    <div class="main-panel">
+        <header class="topbar">
+            <div>
+                <h2>Dashboard Admin</h2>
+                <p>Selamat datang, <?= htmlspecialchars($_SESSION['nama_lengkap']) ?>. Pantau transaksi dan performa layanan carwash Anda di sini.</p>
+            </div>
+            <div class="topbar-actions">
+                <span class="pill">Admin</span>
+                <span class="pill"><?= date('d M Y') ?></span>
+            </div>
+        </header>
+
+        <main class="content">
+            <?php if ($flash): ?>
+                <div class="alert alert-<?= $flash['type'] === 'success' ? 'success' : 'danger' ?> alert-dismissible fade show mb-4" role="alert">
+                    <?= htmlspecialchars($flash['message']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="stat-card p-3 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <div class="hero-icon bg-primary text-white me-3">🚗</div>
                             <div>
@@ -174,10 +276,8 @@ $flash = get_flash_message();
                         <p class="mb-0 text-muted">Jumlah transaksi yang dicatat hari ini.</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body">
+                <div class="col-md-6 col-xl-3">
+                    <div class="stat-card p-3 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <div class="hero-icon bg-success text-white me-3">💰</div>
                             <div>
@@ -188,10 +288,8 @@ $flash = get_flash_message();
                         <p class="mb-0 text-muted">Total pembayaran selama bulan berjalan.</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body">
+                <div class="col-md-6 col-xl-3">
+                    <div class="stat-card p-3 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <div class="hero-icon bg-warning text-white me-3">👥</div>
                             <div>
@@ -202,10 +300,8 @@ $flash = get_flash_message();
                         <p class="mb-0 text-muted">Jumlah pelanggan terdaftar aktif.</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body">
+                <div class="col-md-6 col-xl-3">
+                    <div class="stat-card p-3 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <div class="hero-icon bg-info text-white me-3">🧼</div>
                             <div>
@@ -217,61 +313,62 @@ $flash = get_flash_message();
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="mb-0">Transaksi Terbaru</h5>
-                    <small class="text-muted">Lima transaksi terakhir di sistem.</small>
+            <div class="content-card">
+                <div class="card-header bg-white border-0 px-4 py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Transaksi Terbaru</h5>
+                        <small class="text-muted">Lima transaksi terakhir di sistem.</small>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Pelanggan</th>
-                                <th>Plat Nomor</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Total Bayar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php if ($latest_transactions): ?>
-                            <?php foreach ($latest_transactions as $index => $trx): ?>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
                                 <tr>
-                                    <td><?= $index + 1 ?></td>
-                                    <td><?= htmlspecialchars($trx['pelanggan']) ?></td>
-                                    <td><?= htmlspecialchars($trx['plat_nomor']) ?></td>
-                                    <td><?= htmlspecialchars($trx['tanggal_transaksi']) ?></td>
-                                    <td>
-                                        <?php
-                                            $badge = 'secondary';
-                                            if ($trx['status'] === 'antri') $badge = 'warning';
-                                            if ($trx['status'] === 'proses') $badge = 'primary';
-                                            if ($trx['status'] === 'selesai') $badge = 'success';
-                                            if ($trx['status'] === 'batal') $badge = 'danger';
-                                        ?>
-                                        <span class="badge bg-<?= $badge ?> text-uppercase"><?= htmlspecialchars($trx['status']) ?></span>
-                                    </td>
-                                    <td>Rp <?= number_format($trx['total_bayar'], 0, ',', '.') ?></td>
+                                    <th>#</th>
+                                    <th>Pelanggan</th>
+                                    <th>Plat Nomor</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Total Bayar</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-4">Belum ada transaksi terbaru.</td>
-                            </tr>
-                        <?php endif; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            <?php if ($latest_transactions): ?>
+                                <?php foreach ($latest_transactions as $index => $trx): ?>
+                                    <tr>
+                                        <td><?= $index + 1 ?></td>
+                                        <td><?= htmlspecialchars($trx['pelanggan']) ?></td>
+                                        <td><?= htmlspecialchars($trx['plat_nomor']) ?></td>
+                                        <td><?= htmlspecialchars($trx['tanggal_transaksi']) ?></td>
+                                        <td>
+                                            <?php
+                                                $badge = 'secondary';
+                                                if ($trx['status'] === 'antri') $badge = 'warning';
+                                                if ($trx['status'] === 'proses') $badge = 'primary';
+                                                if ($trx['status'] === 'selesai') $badge = 'success';
+                                                if ($trx['status'] === 'batal') $badge = 'danger';
+                                            ?>
+                                            <span class="badge bg-<?= $badge ?> text-uppercase"><?= htmlspecialchars($trx['status']) ?></span>
+                                        </td>
+                                        <td>Rp <?= number_format($trx['total_bayar'], 0, ',', '.') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">Belum ada transaksi terbaru.</td>
+                                </tr>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
