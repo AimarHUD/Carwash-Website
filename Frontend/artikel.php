@@ -2,6 +2,7 @@
 require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
 
+// --- LOGIKA BACKEND ANDA ---
 $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
     id_artikel INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     judul VARCHAR(255) NOT NULL,
@@ -23,7 +24,6 @@ function article_image_url(?string $path): ?string
     if ($path === '') {
         return null;
     }
-
     return '../' . ltrim(str_replace('\\', '/', $path), '/');
 }
 
@@ -35,132 +35,152 @@ function article_summary(string $content, int $limit = 120): string
         if (mb_strlen($cleanContent) <= $limit) {
             return $cleanContent;
         }
-
         return mb_substr($cleanContent, 0, $limit - 3) . '...';
     }
 
     if (strlen($cleanContent) <= $limit) {
         return $cleanContent;
     }
-
     return substr($cleanContent, 0, $limit - 3) . '...';
 }
+// --- AKHIR LOGIKA BACKEND ---
 
-$featuredArticle = $articles[0] ?? null;
-$otherArticles = array_slice($articles, 1);
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikel <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Artikel & Tips - Carwash Woosh</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        /* Desain Konsisten: Latar Biru Muda & Footer Lengket ke bawah */
+        body {
+            background-color: #add8e6 !important; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .site-header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Aksen Garis Biru & Efek Hover pada Card Artikel */
+        .card-friendly {
+            border-top: 5px solid #0d6efd !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-friendly:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .img-artikel-cover {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a class="logo" href="index.php"><?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></a>
-            <nav class="site-nav">
-                <a href="index.php">Home</a>
-                <a href="tentang.php">Tentang Kita</a>
-                <a href="service.php">Service Kita</a>
-                <a href="artikel.php">Artikel</a>
-                <a href="kontak.php">Kontak Kita</a>
+
+
+<header class="site-header py-3">
+    <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
+            <img src="assets/images/logo washwoosh.png" alt="Logo" width="70" class="me-2"> Carwash Woosh
+        </a>
+        
+       <nav class="site-nav d-flex gap-4 fw-semibold">
+                <a class="text-decoration-none text-dark" href="index.php">Home</a>
+                <a class="text-decoration-none text-dark" href="tentang.php">Tentang Kami</a>
+                <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
+                <a class="text-decoration-none text-dark" href="artikel.php">Artikel</a>
+                <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
             </nav>
         </div>
     </header>
 
-    <main class="container content-wrapper">
-        <section class="page-section articles-page news-page">
-            <div class="articles-intro news-intro">
-                <p class="articles-kicker news-kicker">Portal Berita WashWoosh</p>
-                <h1 class="mb-3">Artikel</h1>
-                <p class="articles-lead news-lead">Berita, tips, dan informasi terbaru seputar layanan WashWoosh yang disusun dalam format kartu yang lebih rapi dan mudah dibaca.</p>
+    <main class="py-5 flex-grow-1">
+        <div class="container-fluid px-5">
+            
+            <div class="text-center mb-5">
+                <span class="badge bg-primary mb-3 px-3 py-2 fs-6">Kabar & Informasi</span>
+                <h1 class="fw-bold text-dark display-5">Artikel & Tips Perawatan</h1>
+                <p class="lead text-muted">Temukan berbagai informasi menarik, berita promo, dan tips jitu merawat kendaraan Anda agar selalu tampil prima.</p>
             </div>
-            <?php if (empty($articles)): ?>
-                <div class="alert alert-light border shadow-sm rounded-4 p-4 article-empty-state mb-0">
-                    <h2 class="h4 mb-2">Belum ada artikel yang dipublikasikan.</h2>
-                    <p class="mb-0 text-secondary">Silakan kembali nanti setelah admin menambahkan artikel baru.</p>
-                </div>
-            <?php else: ?>
-                <div class="row g-4 news-grid">
-                    <?php if ($featuredArticle): ?>
-                        <?php $featuredImage = $featuredArticle['image'] ?? $featuredArticle['gambar'] ?? ''; ?>
-                        <div class="col-12 col-md-6 col-lg-7">
-                            <article class="card border-0 shadow-lg rounded-4 overflow-hidden h-100 news-card news-card-featured">
-                                <a class="news-media news-media-featured" href="artikel_detail.php?id=<?= htmlspecialchars($featuredArticle['id_artikel']) ?>">
-                                <?php if (!empty($featuredImage)): ?>
-                                    <img src="<?= htmlspecialchars(article_image_url($featuredImage) ?? '') ?>" alt="<?= htmlspecialchars($featuredArticle['judul']) ?>">
-                                <?php else: ?>
-                                    <div class="news-placeholder">
-                                        <span>Gambar belum tersedia</span>
-                                    </div>
-                                <?php endif; ?>
-                                </a>
-                                <div class="card-body p-4 p-xl-5 d-flex flex-column gap-3">
-                                    <span class="badge text-bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2 align-self-start">Artikel Utama</span>
-                                    <h2 class="card-title fw-bold mb-0 news-title news-title-featured"><?= htmlspecialchars($featuredArticle['judul']) ?></h2>
-                                    <p class="card-text text-secondary mb-0 news-summary"><?= htmlspecialchars(article_summary($featuredArticle['isi'], 120)) ?></p>
-                                    <div class="d-flex flex-wrap align-items-center gap-2 text-secondary small news-meta">
-                                        <span><?= htmlspecialchars($featuredArticle['penulis']) ?></span>
-                                        <span>&middot;</span>
-                                        <span><?= date('d M Y', strtotime($featuredArticle['tanggal'])) ?></span>
-                                    </div>
-                                    <a class="btn btn-primary rounded-pill px-4 py-2 align-self-start news-button" href="artikel_detail.php?id=<?= htmlspecialchars($featuredArticle['id_artikel']) ?>">Baca Selengkapnya</a>
-                                </div>
-                            </article>
-                        </div>
-                    <?php endif; ?>
 
-                    <div class="col-12 col-md-6 col-lg-5">
-                        <div class="d-flex flex-column gap-3 news-list h-100">
-                        <?php if (empty($otherArticles)): ?>
-                            <div class="card border-0 shadow-sm rounded-4 news-card news-card-compact">
+            <div class="row g-4">
+                
+                <?php if (count($articles) > 0): ?>
+                    <?php foreach ($articles as $article): ?>
+                        
+                        <?php 
+                            // Mendapatkan URL Gambar, jika tidak ada gambar maka gunakan gambar ilustrasi bawaan
+                            $imgUrl = article_image_url($article['image']);
+                            if (!$imgUrl) {
+                                $imgUrl = 'assets/images/ilustrasi-cucimobil.png';
+                            }
+                            
+                            // Format Tanggal yang lebih enak dibaca (Contoh: 12 Ags 2023)
+                            $tanggalTampil = date('d M Y', strtotime($article['tanggal']));
+                        ?>
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-friendly bg-white">
+                                <img src="<?= htmlspecialchars($imgUrl) ?>" class="card-img-top img-artikel-cover" alt="<?= htmlspecialchars($article['judul']) ?>">
+                                
                                 <div class="card-body p-4">
-                                    <h2 class="h5 fw-bold mb-2">Artikel lain belum tersedia.</h2>
-                                    <p class="text-secondary mb-0">Silakan cek kembali nanti saat admin menambahkan artikel baru.</p>
+                                    <div class="d-flex align-items-center text-muted mb-3" style="font-size: 13px;">
+                                        <span><i class="fas fa-calendar-alt text-primary me-1"></i> <?= $tanggalTampil ?></span>
+                                        <span class="mx-2">|</span>
+                                        <span><i class="fas fa-user text-primary me-1"></i> <?= htmlspecialchars($article['penulis']) ?></span>
+                                    </div>
+                                    
+                                    <h4 class="card-title fw-bold mb-3"><?= htmlspecialchars($article['judul']) ?></h4>
+                                    <p class="card-text text-muted" style="line-height: 1.6;">
+                                        <?= htmlspecialchars(article_summary($article['isi'], 120)) ?>
+                                    </p>
+                                </div>
+                                
+                                <div class="card-footer bg-white border-0 p-4 pt-0 mt-auto">
+                                    <a href="detail_artikel.php?id=<?= $article['id_artikel'] ?>" class="btn btn-outline-primary rounded-pill px-4 fw-semibold w-100">
+                                        Baca Selengkapnya <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
                                 </div>
                             </div>
-                        <?php else: ?>
-                            <?php foreach ($otherArticles as $artikel): ?>
-                                <?php $articleImage = $artikel['image'] ?? $artikel['gambar'] ?? ''; ?>
-                                <article class="card border-0 shadow-sm rounded-4 overflow-hidden news-card news-card-compact">
-                                    <a class="news-media news-media-compact" href="artikel_detail.php?id=<?= htmlspecialchars($artikel['id_artikel']) ?>">
-                                        <?php if (!empty($articleImage)): ?>
-                                            <img src="<?= htmlspecialchars(article_image_url($articleImage) ?? '') ?>" alt="<?= htmlspecialchars($artikel['judul']) ?>">
-                                        <?php else: ?>
-                                            <div class="news-placeholder">
-                                                <span>Gambar belum tersedia</span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </a>
-                                    <div class="card-body p-4 d-flex flex-column gap-3">
-                                        <h2 class="h5 fw-bold mb-0 news-title news-title-small"><?= htmlspecialchars($artikel['judul']) ?></h2>
-                                        <p class="card-text text-secondary mb-0 news-summary"><?= htmlspecialchars(article_summary($artikel['isi'], 120)) ?></p>
-                                        <div class="d-flex flex-wrap align-items-center gap-2 text-secondary small news-meta">
-                                            <span><?= htmlspecialchars($artikel['penulis']) ?></span>
-                                            <span>&middot;</span>
-                                            <span><?= date('d M Y', strtotime($artikel['tanggal'])) ?></span>
-                                        </div>
-                                        <a class="btn btn-outline-primary rounded-pill px-4 py-2 align-self-start news-button news-button-small" href="artikel_detail.php?id=<?= htmlspecialchars($artikel['id_artikel']) ?>">Baca Selengkapnya</a>
-                                    </div>
-                                </article>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                    
+                <?php else: ?>
+                    <div class="col-12 text-center py-5">
+                        <div class="bg-white rounded-4 shadow-sm p-5 d-inline-block mx-auto">
+                            <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                            <h3 class="fw-bold text-dark">Belum ada artikel</h3>
+                            <p class="text-muted">Nantikan berita dan tips menarik dari kami dalam waktu dekat!</p>
                         </div>
                     </div>
-                </div>
-            <?php endif; ?>
-        </section>
+                <?php endif; ?>
+
+            </div>
+            
+        </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; <?= date('Y') ?> <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?>. Semua hak dilindungi.</p>
+    <footer class="site-footer bg-dark text-white py-4 mt-auto">
+        <div class="container-fluid px-5 text-center">
+            <p class="mb-0">&copy; <?= date('Y') ?> Carwash Woosh. Semua hak dilindungi.</p>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
