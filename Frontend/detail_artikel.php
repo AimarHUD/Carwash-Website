@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
+$current_page = 'artikel.php';
 
 // 1. Ambil ID artikel dari URL (misal: detail_artikel.php?id=5)
 $id_artikel = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -58,11 +59,6 @@ if ($article) {
             min-height: 100vh;
         }
         
-        .site-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
         /* Styling spesifik untuk gambar artikel penuh */
         .img-artikel-detail {
             width: 100%;
@@ -79,22 +75,7 @@ if ($article) {
     </style>
 </head>
 <body>
-    <header class="site-header py-3">
-        <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
-                 <img src="assets/images/logo washwoosh.png" alt="Logo Carwash Woosh" width="70" class="me-2 d-none d-md-inline">
-                Carwash Woosh
-            </a>
-            
-            <nav class="site-nav d-flex gap-4 fw-semibold">
-                <a class="text-decoration-none text-dark" href="index.php">Home</a>
-                <a class="text-decoration-none text-dark" href="tentang.php">Tentang Kami</a>
-                <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
-                <a class="text-decoration-none text-primary" href="artikel.php">Artikel</a>
-                <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
-            </nav>
-        </div>
-    </header>
+    <?php include 'includes/site_header.php'; ?>
 
     <main class="py-5 flex-grow-1">
         <div class="container-fluid px-5">
