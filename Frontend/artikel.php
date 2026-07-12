@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/company_data.php';
 require_once '../config/koneksi.php';
+$current_page = basename($_SERVER['PHP_SELF']);
 
 // --- LOGIKA BACKEND ANDA ---
 $pdo->exec('CREATE TABLE IF NOT EXISTS tb_artikel (
@@ -67,11 +68,6 @@ function article_summary(string $content, int $limit = 120): string
             min-height: 100vh;
         }
         
-        .site-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
         /* Aksen Garis Biru & Efek Hover pada Card Artikel */
         .card-friendly {
             border-top: 5px solid #0d6efd !important;
@@ -93,21 +89,7 @@ function article_summary(string $content, int $limit = 120): string
 <body>
 
 
-<header class="site-header py-3">
-    <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
-            <img src="assets/images/logo washwoosh.png" alt="Logo" width="70" class="me-2"> Carwash Woosh
-        </a>
-        
-       <nav class="site-nav d-flex gap-4 fw-semibold">
-                <a class="text-decoration-none text-dark" href="index.php">Home</a>
-                <a class="text-decoration-none text-dark" href="tentang.php">Tentang Kami</a>
-                <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
-                <a class="text-decoration-none text-dark" href="artikel.php">Artikel</a>
-                <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
-            </nav>
-        </div>
-    </header>
+<?php include 'includes/site_header.php'; ?>
 
     <main class="py-5 flex-grow-1">
         <div class="container-fluid px-5">

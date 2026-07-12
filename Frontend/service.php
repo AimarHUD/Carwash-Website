@@ -23,11 +23,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             min-height: 100vh;
         }
         
-        .site-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
         /* Aksen Garis Biru pada Kartu Kontak */
         .card-friendly {
             border-top: 5px solid #0d6efd !important;
@@ -41,22 +36,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </style>
 </head>
 <body>
-      <header class="site-header py-3">
-        <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
-                 <img src="assets/images/logo washwoosh.png" alt="Logo Carwash Woosh" width="70" class="me-2 d-none d-md-inline">
-                Carwash Woosh
-            </a>
-            
-            <nav class="site-nav d-flex gap-4 fw-semibold">
-                <a class="text-decoration-none <?= $current_page === 'index.php' ? 'text-primary' : 'text-dark' ?>" href="index.php">Home</a>
-                <a class="text-decoration-none <?= $current_page === 'tentang.php' ? 'text-primary' : 'text-dark' ?>" href="tentang.php">Tentang Kami</a>
-                <a class="text-decoration-none <?= $current_page === 'service.php' ? 'text-primary' : 'text-dark' ?>" href="service.php">Service Kami</a>
-                <a class="text-decoration-none <?= $current_page === 'artikel.php' ? 'text-primary' : 'text-dark' ?>" href="artikel.php">Artikel</a>
-                <a class="text-decoration-none <?= $current_page === 'kontak.php' ? 'text-primary' : 'text-dark' ?>" href="kontak.php">Kontak Kami</a>
-            </nav>
-        </div>
-    </header>
+    <?php include 'includes/site_header.php'; ?>
 
     <main class="container flex-grow-1">
         <section class="page-section">
