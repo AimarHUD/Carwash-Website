@@ -25,11 +25,62 @@ try {
     ("Roni Wijaya", "roni.wijaya@email.com", "082987654321", "Apakah ada diskon untuk member setia atau paket tahunan?", "baru")');
 }
 
+function normalize_search_date($value)
+{
+    $value = trim($value);
+    if ($value === '') {
+        return null;
+    }
+
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+        return $value;
+    }
+
+    if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $value, $matches)) {
+        return sprintf('%04d-%02d-%02d', $matches[3], $matches[2], $matches[1]);
+    }
+
+    if (preg_match('/^(\d{2})-(\d{2})-(\d{4})$/', $value, $matches)) {
+        return sprintf('%04d-%02d-%02d', $matches[3], $matches[2], $matches[1]);
+    }
+
+    $timestamp = strtotime($value);
+    if ($timestamp !== false) {
+        return date('Y-m-d', $timestamp);
+    }
+
+    return null;
+}
+
+$search_name = trim($_GET['nama'] ?? '');
+$search_date = trim($_GET['created_at'] ?? '');
+
+$where_clauses = ['k.deleted_at IS NULL'];
+$params = [];
+
+if ($search_name !== '') {
+    $where_clauses[] = 'k.nama LIKE :nama';
+    $params[':nama'] = '%' . $search_name . '%';
+}
+
+if ($search_date !== '') {
+    $normalized_date = normalize_search_date($search_date);
+    if ($normalized_date !== null) {
+        $where_clauses[] = 'DATE(k.created_at) = :created_at';
+        $params[':created_at'] = $normalized_date;
+    } else {
+        $where_clauses[] = '(DATE_FORMAT(k.created_at, "%d/%m/%Y") LIKE :created_at_like OR DATE_FORMAT(k.created_at, "%Y-%m-%d") LIKE :created_at_like2)';
+        $params[':created_at_like'] = '%' . $search_date . '%';
+        $params[':created_at_like2'] = '%' . $search_date . '%';
+    }
+}
+
 // Ambil pesan masuk
-$stmt = $pdo->query('SELECT k.id_kontak, k.nama, k.email, k.no_telp, k.pesan, k.created_at, k.status
+$stmt = $pdo->prepare('SELECT k.id_kontak, k.nama, k.email, k.no_telp, k.pesan, k.created_at, k.status
     FROM tb_kontak k
-    WHERE k.deleted_at IS NULL
+    WHERE ' . implode(' AND ', $where_clauses) . '
     ORDER BY k.created_at DESC');
+$stmt->execute($params);
 $kontak_list = $stmt->fetchAll();
 
 $flash = get_flash_message();
@@ -151,6 +202,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 </div>
             <?php endif; ?>
 
+            <div class="panel-card p-3 mb-4">
+                <form method="get" class="row g-2 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold">Nama Pengirim</label>
+                        <input type="text" name="nama" class="form-control" value="<?= htmlspecialchars($search_name) ?>" placeholder="Nama">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold">Tanggal Kirim</label>
+                        <input type="text" name="created_at" class="form-control" value="<?= htmlspecialchars($search_date) ?>" placeholder="Tanggal">
+                    </div>
+                    <div class="col-md-2 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                        <a href="kotak_masuk.php" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </form>
+            </div>
+
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <div class="stat-card p-3 h-100">
@@ -168,8 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <?php if (empty($kontak_list)): ?>
                 <div class="panel-card p-4 text-center">
-                    <h5 class="mb-2">Belum ada pesan masuk</h5>
-                    <p class="text-muted mb-0">Pesan dari pelanggan akan muncul di sini.</p>
+                    <h5 class="mb-2"><?= ($search_name !== '' || $search_date !== '') ? 'Tidak ada pesan yang sesuai pencarian' : 'Belum ada pesan masuk' ?></h5>
+                    <p class="text-muted mb-0"><?= ($search_name !== '' || $search_date !== '') ? 'Coba isi kolom lain atau reset pencarian.' : 'Pesan dari pelanggan akan muncul di sini.' ?></p>
                 </div>
             <?php else: ?>
                 <div class="panel-card p-3">
