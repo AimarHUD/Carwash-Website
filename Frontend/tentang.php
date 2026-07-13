@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/company_data.php';
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -18,9 +19,9 @@ require_once 'includes/company_data.php';
     <title>Tentang Kami - Carwash Woosh</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { background-color: #add8e6 !important; min-height: 100vh; display: flex; flex-direction: column; }
-        .site-header { background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .team-img { width: 150px; height: 150px; object-fit: cover; border: 5px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .card-friendly { border-top: 5px solid #0d6efd !important; }
     </style>
@@ -28,21 +29,7 @@ require_once 'includes/company_data.php';
 </head>
 <body>
 
-<header class="site-header py-3">
-    <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
-        <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none d-flex align-items-center" href="index.php">
-            <img src="assets/images/logo washwoosh.png" alt="Logo" width="70" class="me-2"> Carwash Woosh
-        </a>
-        
-        <nav class="site-nav d-flex gap-4 fw-semibold">
-                <a class="text-decoration-none text-dark" href="index.php">Home</a>
-                <a class="text-decoration-none text-dark" href="tentang.php">Tentang Kami</a>
-                <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
-                <a class="text-decoration-none text-dark" href="artikel.php">Artikel</a>
-                <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
-            </nav>
-        </div>
-</header>
+<?php include 'includes/site_header.php'; ?>
 
 <main class="py-5 flex-grow-1">
     <div class="container-fluid px-5">

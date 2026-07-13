@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/company_data.php';
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -30,24 +31,7 @@ require_once 'includes/company_data.php';
     </style>
 </head>
 <body>
-    <header class="site-header py-3">
-        <!-- Menggunakan container-fluid agar konten menyebar lebih lebar, tidak menumpuk di tengah -->
-        <div class="container-fluid px-5 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand fw-bold fs-3 text-primary text-decoration-none" href="index.php">
-                <!-- Mengubah nama file dan alt logo menjadi Carwash Woosh -->
-                <img src="assets/images/logo washwoosh.png" alt="Logo Carwash Woosh" width="70" class="me-2 d-none d-md-inline">
-                Carwash Woosh
-            </a>
-            
-            <nav class="site-nav d-flex gap-4 fw-semibold">
-                <a class="text-decoration-none text-dark" href="index.php">Home</a>
-                <a class="text-decoration-none text-dark" href="tentang.php">Tentang Kami</a>
-                <a class="text-decoration-none text-dark" href="service.php">Service Kami</a>
-                <a class="text-decoration-none text-dark" href="artikel.php">Artikel</a>
-                <a class="text-decoration-none text-dark" href="kontak.php">Kontak Kami</a>
-            </nav>
-        </div>
-    </header>
+    <?php include 'includes/site_header.php'; ?>
 
     <main>
         <!-- Hero Section dengan Slogan, Deskripsi, dan Gambar -->
