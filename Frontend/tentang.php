@@ -7,6 +7,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <title>Tentang WashWoosh</title>
+   <link rel="stylesheet" href="assets/css/style.css">
+=======
+    <title>Tentang <?= htmlspecialchars($company['nama_perusahaan'] ?? 'WashWoosh') ?></title>
+    <link rel="stylesheet" href="assets/css/style.css">
+>>>>>>> 46a06ca1e9a16150fc2436413507605f5aec4049
+=======
     <title>Tentang Kami - Carwash Woosh</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,6 +25,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .team-img { width: 150px; height: 150px; object-fit: cover; border: 5px solid #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .card-friendly { border-top: 5px solid #0d6efd !important; }
     </style>
+>>>>>>> e6a6569151981da952e9a5d8a1ee9995d5b44df4
 </head>
 <body>
 
