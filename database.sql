@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS db_carwash;
+ DROP DATABASE IF EXISTS db_carwash;
 CREATE DATABASE db_carwash CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE db_carwash;
 
