@@ -23,6 +23,7 @@ if (!function_exists('washwoosh_nav_class')) {
             <a class="<?= washwoosh_nav_class('service.php', $current_page) ?>" href="service.php">Service Kami</a>
             <a class="<?= washwoosh_nav_class('artikel.php', $current_page) ?>" href="artikel.php">Artikel</a>
             <a class="<?= washwoosh_nav_class('kontak.php', $current_page) ?>" href="kontak.php">Kontak Kami</a>
+            <a class="<?= washwoosh_nav_class('login.php', $current_page) ?>" href="login.php">Galeri</a>
         </nav>
     </div>
 </header>

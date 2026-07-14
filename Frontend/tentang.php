@@ -44,6 +44,7 @@ Seiring berjalannya waktu, Carwash Woosh terus bertransformasi menjadi pusat per
                 <li class="mb-2">• Menjadi standar utama layanan perawatan kendaraan nasional.</li>
                 <li class="mb-2">• Pelopor layanan cuci ramah lingkungan berbasis teknologi.</li>
                 <li>• Memberikan dampak positif bagi komunitas dan lingkungan.</li>
+                <li>- Memberikan LAyanan yang nyaman untuk pelanggan.</li>
             </ul>
         </div>
     </div>
@@ -53,6 +54,7 @@ Seiring berjalannya waktu, Carwash Woosh terus bertransformasi menjadi pusat per
             <ul class="list-unstyled mt-3 text-muted">
                 <li class="mb-2">• Memberikan pelayanan prima yang cepat dan mendetail.</li>
                 <li class="mb-2">• Membangun tim yang profesional dan berdedikasi.</li>
+                <li class="mb-2">• Menggunakan teknologi yang nyaman dan canggih.</li>
                 <li>• Inovasi berkelanjutan dengan peralatan modern.</li>
             </ul>
         </div>
